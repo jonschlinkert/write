@@ -3,7 +3,7 @@
 > Write files to disk, creating intermediate directories if they don't exist.
 
 Also see
-* [delete](https://github.com/jonschlinkert/write) for easy file and folder deleting.
+* [delete](https://github.com/jonschlinkert/delete) for easy file and folder deleting.
 * [del](https://github.com/sindresorhus/del) if you need to delete a glob of files or folders.
 
 ## Install
