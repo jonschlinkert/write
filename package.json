@@ -1,0 +1,51 @@
+{
+  "name": "write",
+  "description": "Write files to disk, creating intermediate directories if they don't exist.",
+  "version": "0.1.1",
+  "homepage": "https://github.com/jonschlinkert/write",
+  "author": {
+    "name": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jonschlinkert/write.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jonschlinkert/write/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/jonschlinkert/write/blob/master/LICENSE-MIT"
+    }
+  ],
+  "keywords": [
+    "file",
+    "filepath",
+    "files",
+    "filesystem",
+    "folder",
+    "fs",
+    "fs.writeFile",
+    "fs.writeFileSync",
+    "path",
+    "write"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "delete": "^0.1.0",
+    "mocha": "*",
+    "verb": "~0.2.6"
+  },
+  "dependencies": {
+    "mkdirp": "^0.5.0"
+  }
+}
