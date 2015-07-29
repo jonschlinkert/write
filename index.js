@@ -68,3 +68,26 @@ module.exports.sync = function writeFileSync(dest, str) {
   }
   fs.writeFileSync(dest, str);
 };
+
+/**
+ * Uses `fs.createWriteStream`, but also creates any intermediate
+ * directories if they don't already exist.
+ *
+ * ```js
+ * var write = require('write');
+ * write.stream('foo.txt');
+ * ```
+ *
+ * @name  writeFile.stream
+ * @param  {String} `dest` Destination file path
+ * @return  {Stream} Returns a write stream.
+ * @api public
+ */
+
+module.exports.stream = function writeFileStream(dest) {
+  var dir = path.dirname(dest);
+  if (!fs.existsSync(dir)) {
+    mkdir.sync(dir);
+  }
+  return fs.createWriteStream(dest);
+};

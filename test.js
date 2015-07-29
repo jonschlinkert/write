@@ -63,3 +63,19 @@ describe('write sync:', function () {
     });
   });
 });
+
+describe.only('write stream:', function () {
+  afterEach(function () {
+    fs.existsSync('a/b/c/foo.md').should.be.true;
+    try {
+      del.sync('a/');
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  it('should write files', function () {
+    var file = fs.createReadStream('README.md')
+      .pipe(writeFile.stream('a/b/c/foo.md'))
+  });
+});
