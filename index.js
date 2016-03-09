@@ -1,7 +1,7 @@
 /*!
  * write <https://github.com/jonschlinkert/write>
  *
- * Copyright (c) 2014-2015, Jon Schlinkert.
+ * Copyright (c) 2014-2016, Jon Schlinkert.
  * Licensed under the MIT License.
  */
 
@@ -31,11 +31,11 @@ var mkdir = require('mkdirp');
 
 module.exports = function writeFile(dest, str, cb) {
   var dir = path.dirname(dest);
-  fs.exists(dir, function (exists) {
+  fs.exists(dir, function(exists) {
     if (exists) {
       fs.writeFile(dest, str, cb);
     } else {
-      mkdir(dir, function (err) {
+      mkdir(dir, function(err) {
         if (err) {
           return cb(err);
         } else {

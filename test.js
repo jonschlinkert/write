@@ -16,37 +16,37 @@ var writeFile = require('./');
 
 var files = ['tmp/a.md', 'tmp/b.md', 'tmp/c.md', 'tmp/d.md', 'tmp/e.md'];
 
-describe('write :', function () {
-  afterEach(function (cb) {
-    async.each(files, function (file, next) {
-      fs.exists(file, function (exists) {
+describe('write :', function() {
+  afterEach(function(cb) {
+    async.each(files, function(file, next) {
+      fs.exists(file, function(exists) {
         if (!exists) return cb(new Error('file does not exist:', file));
-        del(file, function (err) {
+        del(file, function(err) {
           if (err) return cb(err);
           next();
         });
       });
-    }, function (err) {
+    }, function(err) {
       if (err) return cb(err);
       cb();
     });
   });
 
-  it('should write files asynchronously', function (cb) {
-    async.each(files, function (file, next) {
-      writeFile(file, 'content...', function (err) {
+  it('should write files asynchronously', function(cb) {
+    async.each(files, function(file, next) {
+      writeFile(file, 'content...', function(err) {
         if (!err) return next(err);
         next();
       });
-    }, function (err) {
+    }, function(err) {
       if (err) return cb(err);
       cb();
     });
   });
 });
 
-describe('write sync:', function () {
-  afterEach(function () {
+describe('write sync:', function() {
+  afterEach(function() {
     files.forEach(function(fp) {
       fs.existsSync(fp).should.be.true;
       try {
@@ -57,15 +57,15 @@ describe('write sync:', function () {
     });
   });
 
-  it('should write files synchronously', function () {
+  it('should write files synchronously', function() {
     files.forEach(function(fp) {
       writeFile.sync(fp, '');
     });
   });
 });
 
-describe.only('write stream:', function () {
-  afterEach(function () {
+describe.only('write stream:', function() {
+  afterEach(function() {
     fs.existsSync('a/b/c/foo.md').should.be.true;
     try {
       del.sync('a/');
@@ -74,7 +74,7 @@ describe.only('write stream:', function () {
     }
   });
 
-  it('should write files', function () {
+  it('should write files', function() {
     var file = fs.createReadStream('README.md')
       .pipe(writeFile.stream('a/b/c/foo.md'))
   });
