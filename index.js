@@ -10,10 +10,11 @@
 var fs = require('fs');
 var path = require('path');
 var mkdir = require('mkdirp');
+var exists = require('try-open');
 
 /**
- * Asynchronously write a file to disk. Creates any intermediate
- * directories if they don't already exist.
+ * Asynchronously write a file to disk, creating any intermediate
+ * directories along the way if they don't already exist.
  *
  * ```js
  * var writeFile = require('write');
@@ -22,24 +23,34 @@ var mkdir = require('mkdirp');
  * });
  * ```
  *
- * @name  writeFile
+ * @name writeFile
  * @param  {String} `dest` Destination file path
  * @param  {String} `str` String to write to disk.
  * @param  {Function} `callback`
  * @api public
  */
 
-module.exports = function writeFile(dest, str, cb) {
+function writeFile(dest, str, options, cb) {
+  if (typeof options === 'function') {
+    cb = options;
+    options = {};
+  }
+
   var dir = path.dirname(dest);
-  fs.exists(dir, function(exists) {
-    if (exists) {
-      fs.writeFile(dest, str, cb);
+  fs.stat(dir, function(err, stats) {
+    if (err && err.code !== 'ENOENT') {
+      cb(err);
+      return;
+    }
+
+    if (!err) {
+      fs.writeFile(dest, str, options, cb);
     } else {
       mkdir(dir, function(err) {
         if (err) {
           return cb(err);
         } else {
-          fs.writeFile(dest, str, cb);
+          fs.writeFile(dest, str, options, cb);
         }
       });
     }
@@ -47,47 +58,61 @@ module.exports = function writeFile(dest, str, cb) {
 };
 
 /**
- * Synchronously write files to disk. Creates any intermediate
- * directories if they don't already exist.
+ * Synchronously write files to disk, creating any intermediate
+ * directories along the way if they don't already exist.
  *
  * ```js
  * var writeFile = require('write');
  * writeFile.sync('foo.txt', 'This is content to write.');
  * ```
  *
- * @name  writeFile.sync
+ * @name .writeFile.sync
  * @param  {String} `dest` Destination file path
  * @param  {String} `str` String to write to disk.
  * @api public
  */
 
-module.exports.sync = function writeFileSync(dest, str) {
-  var dir = path.dirname(dest);
-  if (!fs.existsSync(dir)) {
-    mkdir.sync(dir);
+writeFile.sync = function(dest, options, str) {
+  if (arguments.length !== 3) {
+    str = options;
+    options = {};
   }
-  fs.writeFileSync(dest, str);
+  createDirectory(dest, options);
+  fs.writeFileSync(dest, options, str);
 };
 
 /**
  * Uses `fs.createWriteStream`, but also creates any intermediate
- * directories if they don't already exist.
+ * directories along the way if they don't already exist.
  *
  * ```js
- * var write = require('write');
- * write.stream('foo.txt');
+ * var writeFile = require('write');
+ * writeFile.stream('foo.txt');
  * ```
  *
- * @name  writeFile.stream
+ * @name .writeFile.stream
  * @param  {String} `dest` Destination file path
  * @return  {Stream} Returns a write stream.
  * @api public
  */
 
-module.exports.stream = function writeFileStream(dest) {
-  var dir = path.dirname(dest);
-  if (!fs.existsSync(dir)) {
-    mkdir.sync(dir);
-  }
+writeFile.stream = function(dest, options) {
+  createDirectory(dest, options);
   return fs.createWriteStream(dest);
 };
+
+/**
+ * Create a directory if it doesn't already exist
+ */
+
+function createDirectory(dest, options) {
+  var dir = path.dirname(dest);
+  if (exists(dir)) return;
+  mkdir.sync(dir, options);
+}
+
+/**
+ * Expose `writeFile`
+ */
+
+module.exports = writeFile;
