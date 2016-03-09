@@ -1,18 +1,26 @@
-# write [![NPM version](https://badge.fury.io/js/write.svg)](http://badge.fury.io/js/write)  [![Build Status](https://travis-ci.org/jonschlinkert/write.svg)](https://travis-ci.org/jonschlinkert/write)
+# write [![NPM version](https://img.shields.io/npm/v/write.svg)](https://www.npmjs.com/package/write) [![Build Status](https://img.shields.io/travis/jonschlinkert/write.svg)](https://travis-ci.org/jonschlinkert/write)
 
 > Write files to disk, creating intermediate directories if they don't exist.
 
-Install with [npm](https://www.npmjs.com/)
+## Install
+
+Install with [npm](https://www.npmjs.com/):
 
 ```sh
-$ npm i write --save
+$ npm install write --save
 ```
 
-## API docs
+## Usage
 
-### [writeFile](index.js#L32)
+```js
+var writeFile = require('write');
+```
 
-Asynchronously write a file to disk. Creates any intermediate directories if they don't already exist.
+## API
+
+### [writeFile](index.js#L33)
+
+Asynchronously write a file to disk, creating any intermediate directories along the way if they don't already exist.
 
 **Params**
 
@@ -29,9 +37,9 @@ writeFile('foo.txt', 'This is content to write.', function(err) {
 });
 ```
 
-### [.writeFile.sync](index.js#L64)
+### [.writeFile.sync](index.js#L75)
 
-Synchronously write files to disk. Creates any intermediate directories if they don't already exist.
+Synchronously write files to disk, creating any intermediate directories along the way if they don't already exist.
 
 **Params**
 
@@ -45,9 +53,9 @@ var writeFile = require('write');
 writeFile.sync('foo.txt', 'This is content to write.');
 ```
 
-### [.writeFile.stream](index.js#L87)
+### [.writeFile.stream](index.js#L99)
 
-Uses `fs.createWriteStream`, but also creates any intermediate directories if they don't already exist.
+Uses `fs.createWriteStream`, but also creates any intermediate directories along the way if they don't already exist.
 
 **Params**
 
@@ -57,45 +65,57 @@ Uses `fs.createWriteStream`, but also creates any intermediate directories if th
 **Example**
 
 ```js
-var write = require('write');
-write.stream('foo.txt');
+var writeFile = require('write');
+writeFile.stream('foo.txt');
 ```
 
-## Related
+## Related projects
 
-* [delete](https://github.com/jonschlinkert/delete): Delete files and folders and any intermediate directories if they exist (sync and async).
-* [read-yaml](https://github.com/jonschlinkert/read-yaml): Very thin wrapper around js-yaml for directly reading in YAML files.
-* [read-json](https://github.com/azer/read-json): Reads and parses a JSON file.
-* [read-data](https://github.com/jonschlinkert/read-data): Read JSON or YAML files.
-* [write-yaml](https://github.com/jonschlinkert/write-yaml): Write YAML. Converts JSON to YAML writes it to the specified file.
-* [write-json](https://github.com/jonschlinkert/write-json): Write a JSON to file disk, also creates directories in the dest path if they… [more](https://github.com/jonschlinkert/write-json)
+* [delete](https://www.npmjs.com/package/delete): Delete files and folders and any intermediate directories if they exist (sync and async). | [homepage](https://github.com/jonschlinkert/delete)
+* [read-data](https://www.npmjs.com/package/read-data): Read JSON or YAML files. | [homepage](https://github.com/jonschlinkert/read-data)
+* [read-json](https://www.npmjs.com/package/read-json): Reads and parses a JSON file. | [homepage](https://github.com/azer/read-json)
+* [read-yaml](https://www.npmjs.com/package/read-yaml): Very thin wrapper around js-yaml for directly reading in YAML files. | [homepage](https://github.com/jonschlinkert/read-yaml)
+* [write-json](https://www.npmjs.com/package/write-json): Write a JSON file to disk, also creates intermediate directories in the destination path if… [more](https://www.npmjs.com/package/write-json) | [homepage](https://github.com/jonschlinkert/write-json)
+* [write-yaml](https://www.npmjs.com/package/write-yaml): Write YAML. Converts JSON to YAML writes it to the specified file. | [homepage](https://github.com/jonschlinkert/write-yaml)
+
+## Contributing
+
+Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/jonschlinkert/write/issues/new).
+
+## Building docs
+
+Generate readme and API documentation with [verb](https://github.com/verbose/verb):
+
+```sh
+$ npm install verb && npm run docs
+```
+
+Or, if [verb](https://github.com/verbose/verb) is installed globally:
+
+```sh
+$ verb
+```
 
 ## Running tests
 
 Install dev dependencies:
 
 ```sh
-$ npm i -d && npm test
+$ npm install -d && npm test
 ```
-
-## Contributing
-
-Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/jonschlinkert/write/issues/new)
 
 ## Author
 
 **Jon Schlinkert**
 
-+ [github/jonschlinkert](https://github.com/jonschlinkert)
-+ [twitter/jonschlinkert](http://twitter.com/jonschlinkert)
+* [github/jonschlinkert](https://github.com/jonschlinkert)
+* [twitter/jonschlinkert](http://twitter.com/jonschlinkert)
 
 ## License
 
-Copyright © 2015 Jon Schlinkert
-Released under the MIT license.
+Copyright © 2016 [Jon Schlinkert](https://github.com/jonschlinkert)
+Released under the [MIT license](https://github.com/jonschlinkert/write/blob/master/LICENSE).
 
 ***
 
-_This file was generated by [verb-cli](https://github.com/assemble/verb-cli) on July 29, 2015._
-
-<!-- deps:mocha -->
+_This file was generated by [verb](https://github.com/verbose/verb), v0.9.0, on March 09, 2016._
