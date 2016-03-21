@@ -72,13 +72,9 @@ function writeFile(dest, str, options, cb) {
  * @api public
  */
 
-writeFile.sync = function(dest, options, str) {
-  if (arguments.length !== 3) {
-    str = options;
-    options = {};
-  }
+writeFile.sync = function(dest, str, options) {
   createDirectory(dest, options);
-  fs.writeFileSync(dest, options, str);
+  fs.writeFileSync(dest, str, options);
 };
 
 /**
@@ -106,6 +102,10 @@ writeFile.stream = function(dest, options) {
  */
 
 function createDirectory(dest, options) {
+  if (options && typeof options !== 'object') {
+    options = {};
+  }
+
   var dir = path.dirname(dest);
   if (exists(dir)) return;
   mkdir.sync(dir, options);
