@@ -10,7 +10,7 @@
 var fs = require('fs');
 var path = require('path');
 var mkdir = require('mkdirp');
-var exists = require('try-open');
+var exists = require('fs-exists-sync');
 
 /**
  * Asynchronously write a file to disk, creating any intermediate

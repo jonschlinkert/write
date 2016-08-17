@@ -9,7 +9,7 @@
 
 require('mocha');
 var assert = require('assert');
-var exists = require('try-open');
+var exists = require('fs-exists-sync');
 var fs = require('fs');
 var del = require('delete');
 var should = require('should');

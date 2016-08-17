@@ -10,7 +10,9 @@
   },
   "license": "MIT",
   "files": [
-    "index.js"
+    "index.js",
+    "LICENSE",
+    "README.md"
   ],
   "main": "index.js",
   "engines": {
@@ -20,8 +22,8 @@
     "test": "mocha"
   },
   "dependencies": {
-    "mkdirp": "^0.5.1",
-    "try-open": "^0.1.2"
+    "fs-exists-sync": "^0.1.0",
+    "mkdirp": "^0.5.1"
   },
   "devDependencies": {
     "async": "^1.5.2",
@@ -55,11 +57,11 @@
     "related": {
       "list": [
         "delete",
-        "write-yaml",
-        "write-json",
-        "read-yaml",
+        "read-data",
         "read-json",
-        "read-data"
+        "read-yaml",
+        "write-json",
+        "write-yaml"
       ]
     },
     "reflinks": [
