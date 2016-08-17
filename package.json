@@ -1,7 +1,7 @@
 {
   "name": "write",
   "description": "Write files to disk, creating intermediate directories if they don't exist.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "homepage": "https://github.com/jonschlinkert/write",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/write",
