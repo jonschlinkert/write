@@ -37,7 +37,7 @@ writeFile('foo.txt', 'This is content to write.', function(err) {
 });
 ```
 
-### [.writeFile.sync](index.js#L74)
+### [.sync](index.js#L74)
 
 Synchronously write files to disk, creating any intermediate directories along the way if they don't already exist.
 
@@ -53,7 +53,7 @@ var writeFile = require('write');
 writeFile.sync('foo.txt', 'This is content to write.');
 ```
 
-### [.writeFile.stream](index.js#L94)
+### [.stream](index.js#L94)
 
 Uses `fs.createWriteStream`, but also creates any intermediate directories along the way if they don't already exist.
 

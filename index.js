@@ -65,7 +65,7 @@ function writeFile(dest, str, options, cb) {
  * writeFile.sync('foo.txt', 'This is content to write.');
  * ```
  *
- * @name writeFile.sync
+ * @name .sync
  * @param  {String} `dest` Destination file path
  * @param  {String} `str` String to write to disk.
  * @api public
@@ -85,7 +85,7 @@ writeFile.sync = function(dest, str, options) {
  * writeFile.stream('foo.txt');
  * ```
  *
- * @name writeFile.stream
+ * @name .stream
  * @param  {String} `dest` Destination file path
  * @return  {Stream} Returns a write stream.
  * @api public
