@@ -22,7 +22,6 @@ var exists = require('fs-exists-sync');
  *   if (err) console.log(err);
  * });
  * ```
- *
  * @name writeFile
  * @param  {String} `dest` Destination file path
  * @param  {String} `str` String to write to disk.
@@ -66,7 +65,7 @@ function writeFile(dest, str, options, cb) {
  * writeFile.sync('foo.txt', 'This is content to write.');
  * ```
  *
- * @name .writeFile.sync
+ * @name writeFile.sync
  * @param  {String} `dest` Destination file path
  * @param  {String} `str` String to write to disk.
  * @api public
@@ -86,7 +85,7 @@ writeFile.sync = function(dest, str, options) {
  * writeFile.stream('foo.txt');
  * ```
  *
- * @name .writeFile.stream
+ * @name writeFile.stream
  * @param  {String} `dest` Destination file path
  * @return  {Stream} Returns a write stream.
  * @api public

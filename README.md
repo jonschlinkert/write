@@ -18,7 +18,7 @@ var writeFile = require('write');
 
 ## API
 
-### [writeFile](index.js#L33)
+### [writeFile](index.js#L32)
 
 Asynchronously write a file to disk, creating any intermediate directories along the way if they don't already exist.
 
@@ -37,7 +37,7 @@ writeFile('foo.txt', 'This is content to write.', function(err) {
 });
 ```
 
-### [.writeFile.sync](index.js#L75)
+### [.writeFile.sync](index.js#L74)
 
 Synchronously write files to disk, creating any intermediate directories along the way if they don't already exist.
 
@@ -53,7 +53,7 @@ var writeFile = require('write');
 writeFile.sync('foo.txt', 'This is content to write.');
 ```
 
-### [.writeFile.stream](index.js#L95)
+### [.writeFile.stream](index.js#L94)
 
 Uses `fs.createWriteStream`, but also creates any intermediate directories along the way if they don't already exist.
 
