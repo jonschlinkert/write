@@ -12,7 +12,6 @@ var assert = require('assert');
 var exists = require('fs-exists-sync');
 var fs = require('fs');
 var del = require('delete');
-var should = require('should');
 var async = require('async');
 var writeFile = require('./');
 
@@ -60,7 +59,7 @@ describe('write stream:', function() {
   });
 
   it('should write files', function() {
-    var file = fs.createReadStream('README.md')
-      .pipe(writeFile.stream('tmp/a/b/c/foo.md'))
+    fs.createReadStream('README.md')
+      .pipe(writeFile.stream('tmp/a/b/c/foo.md'));
   });
 });

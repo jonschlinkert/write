@@ -1,8 +1,8 @@
 /*!
  * write <https://github.com/jonschlinkert/write>
  *
- * Copyright (c) 2014-2016, Jon Schlinkert.
- * Licensed under the MIT License.
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
  */
 
 'use strict';

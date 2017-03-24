@@ -4,15 +4,17 @@
   "version": "0.3.2",
   "homepage": "https://github.com/jonschlinkert/write",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "contributors": [
+    "Charlike Mike Reagent (https://i.am.charlike.online)",
+    "Jon Schlinkert <jon.schlinkert@sellside.com> (http://twitter.com/jonschlinkert)"
+  ],
   "repository": "jonschlinkert/write",
   "bugs": {
     "url": "https://github.com/jonschlinkert/write/issues"
   },
   "license": "MIT",
   "files": [
-    "index.js",
-    "LICENSE",
-    "README.md"
+    "index.js"
   ],
   "main": "index.js",
   "engines": {
@@ -26,11 +28,10 @@
     "mkdirp": "^0.5.1"
   },
   "devDependencies": {
-    "async": "^1.5.2",
-    "delete": "^0.3.0",
-    "gulp-format-md": "^0.1.7",
-    "mocha": "^2.4.5",
-    "should": "^8.2.2"
+    "async": "^2.1.5",
+    "delete": "^0.3.2",
+    "gulp-format-md": "^0.1.11",
+    "mocha": "^3.2.0"
   },
   "keywords": [
     "file",
