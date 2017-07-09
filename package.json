@@ -1,6 +1,6 @@
 {
   "name": "write",
-  "description": "Write files to disk, creating intermediate directories if they don't exist.",
+  "description": "Write files to disk, by first creating intermediate directories if they don't exist, then passing through to node's native fs methods.",
   "version": "0.3.3",
   "homepage": "https://github.com/jonschlinkert/write",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
@@ -27,7 +27,7 @@
     "mkdirp": "^0.5.1"
   },
   "devDependencies": {
-    "async": "^2.5.0",
+    "async-each": "^1.0.1",
     "delete": "^1.1.0",
     "gulp-format-md": "^1.0.0",
     "mocha": "^3.4.2"

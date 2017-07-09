@@ -8,18 +8,24 @@
 'use strict';
 
 require('mocha');
-var assert = require('assert');
-var exists = require('fs-exists-sync');
 var fs = require('fs');
+var assert = require('assert');
+var Readable = require('stream').Readable;
 var del = require('delete');
-var async = require('async');
+var each = require('async-each');
 var writeFile = require('./');
-
 var files = ['tmp/a.md', 'tmp/b.md', 'tmp/c.md', 'tmp/d.md', 'tmp/e.md'];
 
-describe('write :', function() {
+function toStream(str) {
+  var stream = new Readable();
+  stream.push(str);
+  stream.push(null);
+  return stream;
+}
+
+describe('write', function() {
   afterEach(function(cb) {
-    async.each(files, function(fp, next) {
+    each(files, function(fp, next) {
       fs.stat(fp, next);
     }, function(err) {
       if (err) return cb(err);
@@ -27,39 +33,56 @@ describe('write :', function() {
     });
   });
 
-  it('should write files asynchronously', function(cb) {
-    async.each(files, function(fp, next) {
-      writeFile(fp, 'content...', next);
-    }, cb);
-  });
-});
-
-describe('write sync:', function() {
-  afterEach(function() {
-    files.forEach(function(fp) {
-      assert(exists(fp));
+  describe('async', function() {
+    it('should write files', function(cb) {
+      each(files, function(fp, next) {
+        writeFile(fp, 'content...', next);
+      }, cb);
     });
 
-    del.sync('tmp');
-  });
-
-  it('should write files synchronously', function() {
-    files.forEach(function(fp) {
-      writeFile.sync(fp, '');
-    });
-  });
-});
-
-describe('write stream:', function() {
-  afterEach(function(cb) {
-    fs.stat('tmp/a/b/c/foo.md', function(err, stats) {
-      if (err) return cb(err);
-      del('tmp', cb);
+    it('should return a promise when no callback is given', function(cb) {
+      each(files, function(fp, next) {
+        writeFile(fp, 'content...')
+          .then(function() {
+            next();
+          })
+          .catch(function(err) {
+            next(err);
+          });
+      }, cb);
     });
   });
 
-  it('should write files', function() {
-    fs.createReadStream('README.md')
-      .pipe(writeFile.stream('tmp/a/b/c/foo.md'));
+  describe('promise', function() {
+    it('should write files using .promise', function(cb) {
+      each(files, function(fp, next) {
+        writeFile.promise(fp, 'content...')
+          .then(function() {
+            next();
+          })
+          .catch(function(err) {
+            next(err);
+          });
+      }, cb);
+    });
+  });
+
+  describe('sync', function() {
+    it('should write files using .sync', function() {
+      files.forEach(function(fp) {
+        writeFile.sync(fp, '');
+      });
+    });
+  });
+
+  describe('stream', function() {
+    it('should write files using .stream', function(cb) {
+      each(files, function(fp, next) {
+        toStream('this is content...')
+          .pipe(writeFile.stream(fp))
+          .on('close', next)
+      }, cb);
+    });
   });
 });
+
