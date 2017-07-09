@@ -6,7 +6,7 @@
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "contributors": [
     "Charlike Mike Reagent (https://i.am.charlike.online)",
-    "Jon Schlinkert <jon.schlinkert@sellside.com> (http://twitter.com/jonschlinkert)"
+    "Jon Schlinkert (http://twitter.com/jonschlinkert)"
   ],
   "repository": "jonschlinkert/write",
   "bugs": {
@@ -24,14 +24,13 @@
     "test": "mocha"
   },
   "dependencies": {
-    "fs-exists-sync": "^0.1.0",
     "mkdirp": "^0.5.1"
   },
   "devDependencies": {
-    "async": "^2.1.5",
-    "delete": "^0.3.2",
-    "gulp-format-md": "^0.1.11",
-    "mocha": "^3.2.0"
+    "async": "^2.5.0",
+    "delete": "^1.1.0",
+    "gulp-format-md": "^1.0.0",
+    "mocha": "^3.4.2"
   },
   "keywords": [
     "file",
