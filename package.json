@@ -1,7 +1,7 @@
 {
   "name": "write",
   "description": "Write files to disk, by first creating intermediate directories if they don't exist, then passing through to node's native fs methods.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/jonschlinkert/write",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "contributors": [
