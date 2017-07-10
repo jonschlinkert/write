@@ -18,9 +18,9 @@ var writeFile = require('write');
 
 ## API
 
-### [writeFile](index.js#L32)
+### [writeFile](index.js#L33)
 
-Asynchronously write a file to disk, creating any intermediate directories first if they don't already exist.
+Writes files asynchronously, creating any intermediate directories if they don't already exist, then either calls the callback, if supplied, or returns a promise.
 
 **Params**
 
@@ -38,9 +38,9 @@ writeFile('foo.txt', 'This is content to write.', function(err) {
 });
 ```
 
-### [.promise](index.js#L74)
+### [.promise](index.js#L75)
 
-Synchronously write files to disk, creating any intermediate directories first if they don't already exist.
+Writes files, creating any intermediate directories if they don't already exist, and returns a promise.
 
 **Params**
 
@@ -58,9 +58,9 @@ writeFile.promise('foo.txt', 'This is content to write.')
   });
 ```
 
-### [.sync](index.js#L112)
+### [.sync](index.js#L113)
 
-Synchronously write files to disk, creating any intermediate directories first if they don't already exist.
+Writes files synchronously, creating any intermediate directories if they don't already exist.
 
 **Params**
 
@@ -75,9 +75,9 @@ var writeFile = require('write');
 writeFile.sync('foo.txt', 'This is content to write.');
 ```
 
-### [.stream](index.js#L137)
+### [.stream](index.js#L138)
 
-Uses `fs.createWriteStream`, but also creates any intermediate directories first if they don't already exist.
+Uses `fs.createWriteStream` to write the specified file, creating any intermediate directories if they don't already exist.
 
 **Params**
 
@@ -128,7 +128,7 @@ Pull requests and stars are always welcome. For bugs and feature requests, [plea
 
 | **Commits** | **Contributor** | 
 | --- | --- |
-| 26 | [jonschlinkert](https://github.com/jonschlinkert) |
+| 31 | [jonschlinkert](https://github.com/jonschlinkert) |
 | 1 | [tunnckoCore](https://github.com/tunnckoCore) |
 
 ### Building docs

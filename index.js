@@ -12,8 +12,9 @@ var path = require('path');
 var mkdirp = require('mkdirp');
 
 /**
- * Asynchronously write a file to disk, creating any intermediate
- * directories first if they don't already exist.
+ * Writes files asynchronously, creating any intermediate
+ * directories if they don't already exist, then either calls
+ * the callback, if supplied, or returns a promise.
  *
  * ```js
  * var writeFile = require('write');
@@ -54,8 +55,8 @@ function writeFile(dest, str, options, cb) {
 };
 
 /**
- * Synchronously write files to disk, creating any intermediate
- * directories first if they don't already exist.
+ * Writes files, creating any intermediate directories if they
+ * don't already exist, and returns a promise.
  *
  * ```js
  * var writeFile = require('write');
@@ -95,8 +96,8 @@ writeFile.promise = function(dest, val, options) {
 };
 
 /**
- * Synchronously write files to disk, creating any intermediate
- * directories first if they don't already exist.
+ * Writes files synchronously, creating any intermediate
+ * directories if they don't already exist.
  *
  * ```js
  * var writeFile = require('write');
@@ -115,8 +116,8 @@ writeFile.sync = function(dest, val, options) {
 };
 
 /**
- * Uses `fs.createWriteStream`, but also creates any intermediate
- * directories first if they don't already exist.
+ * Uses `fs.createWriteStream` to write the specified file, creating any
+ * intermediate directories if they don't already exist.
  *
  * ```js
  * var fs = require('fs');
