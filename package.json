@@ -1,7 +1,7 @@
 {
   "name": "write",
   "description": "Write data to a file, replacing the file if it already exists and creating any intermediate directories if they don't already exist. Thin wrapper around node's native fs methods.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "homepage": "https://github.com/jonschlinkert/write",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "contributors": [
