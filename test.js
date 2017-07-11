@@ -83,6 +83,16 @@ describe('write', function() {
           .on('close', next)
       }, cb);
     });
+
+    it('should overwrite an existing file', function(cb) {
+      var fixtures = files.slice().concat(['tmp/e.md', 'tmp/e.md']);
+
+      each(files, function(fp, next) {
+        toStream('this is content...')
+          .pipe(writeFile.stream(fp))
+          .on('close', next)
+      }, cb);
+    });
   });
 });
 
