@@ -12,25 +12,32 @@ var path = require('path');
 var mkdirp = require('mkdirp');
 
 /**
- * Writes files asynchronously, creating any intermediate
- * directories if they don't already exist, then either calls
- * the callback, if supplied, or returns a promise.
+ * Asynchronously writes data to a file, replacing the file if it already
+ * exists and creating any intermediate directories if they don't already
+ * exist. Data can be a string or a buffer. Returns a promise if a callback
+ * function is not passed.
  *
  * ```js
  * var writeFile = require('write');
- * writeFile('foo.txt', 'This is content to write.', function(err) {
+ * writeFile('foo.txt', 'This is content...', function(err) {
  *   if (err) console.log(err);
  * });
+ *
+ * // promise
+ * writeFile('foo.txt', 'This is content...')
+ *   .then(function() {
+ *     // do stuff
+ *   });
  * ```
  * @name writeFile
- * @param  {String} `dest` Destination file path
- * @param  {String} `str` String to write to disk.
- * @param  {Object} `options` Options to pass to [fs.writeFile](https://nodejs.org/api/fs.html#fs_fs_writefile_file_data_options_callback) and [mkdirp][]
- * @param  {Function} `callback` (optional) If no callback is provided, a promise is returned.
+ * @param {string|Buffer|integer} `filepath` filepath or file descriptor.
+ * @param {string|Buffer|Uint8Array} `data` String to write to disk.
+ * @param {object} `options` Options to pass to [fs.writeFile][fs]{#fs_fs_writefile_file_data_options_callback} and/or [mkdirp][]
+ * @param {Function} `callback` (optional) If no callback is provided, a promise is returned.
  * @api public
  */
 
-function writeFile(dest, str, options, cb) {
+function writeFile(filepath, data, options, cb) {
   if (typeof options === 'function') {
     cb = options;
     options = {};
@@ -40,51 +47,51 @@ function writeFile(dest, str, options, cb) {
     return writeFile.promise.apply(null, arguments);
   }
 
-  if (typeof dest !== 'string') {
-    cb(new TypeError('expected dest path to be a string'));
+  if (typeof filepath !== 'string') {
+    cb(new TypeError('expected filepath to be a string'));
     return;
   }
 
-  mkdirp(path.dirname(dest), options, function(err) {
+  mkdirp(path.dirname(filepath), options, function(err) {
     if (err) {
       cb(err);
       return;
     }
-    fs.writeFile(dest, str, options, cb);
+    fs.writeFile(filepath, data, options, cb);
   });
 };
 
 /**
- * Writes files, creating any intermediate directories if they
- * don't already exist, and returns a promise.
+ * The promise version of [writeFile](#writefile). Returns a promise.
  *
  * ```js
  * var writeFile = require('write');
- * writeFile.promise('foo.txt', 'This is content to write.')
+ * writeFile.promise('foo.txt', 'This is content...')
  *   .then(function() {
  *     // do stuff
  *   });
  * ```
  * @name .promise
- * @param  {String} `dest` Destination file path
- * @param  {String|Buffer} `val` String or buffer to write to disk.
- * @param  {Object} `options` Options to pass to [fs.writeFile](https://nodejs.org/api/fs.html#fs_fs_writefile_file_data_options_callback) and [mkdirp][]
+ * @param {string|Buffer|integer} `filepath` filepath or file descriptor.
+ * @param {string|Buffer|Uint8Array} `val` String or buffer to write to disk.
+ * @param {object} `options` Options to pass to [fs.writeFile][fs]{#fs_fs_writefile_file_data_options_callback} and/or [mkdirp][]
+ * @return {Promise}
  * @api public
  */
 
-writeFile.promise = function(dest, val, options) {
-  if (typeof dest !== 'string') {
-    return Promise.reject(new TypeError('expected dest path to be a string'));
+writeFile.promise = function(filepath, val, options) {
+  if (typeof filepath !== 'string') {
+    return Promise.reject(new TypeError('expected filepath to be a string'));
   }
 
   return new Promise(function(resolve, reject) {
-    mkdirp(path.dirname(dest), options, function(err) {
+    mkdirp(path.dirname(filepath), options, function(err) {
       if (err) {
         reject(err);
         return;
       }
 
-      fs.writeFile(dest, val, options, function(err) {
+      fs.writeFile(filepath, val, options, function(err) {
         if (err) {
           reject(err);
           return;
@@ -96,28 +103,34 @@ writeFile.promise = function(dest, val, options) {
 };
 
 /**
- * Writes files synchronously, creating any intermediate
- * directories if they don't already exist.
+ * The synchronous version of [writeFile](#writefile). Returns undefined.
  *
  * ```js
  * var writeFile = require('write');
- * writeFile.sync('foo.txt', 'This is content to write.');
+ * writeFile.sync('foo.txt', 'This is content...');
  * ```
  * @name .sync
- * @param  {String} `dest` Destination file path
- * @param  {String|Buffer} `val` String or buffer to write to disk.
- * @param  {Object} `options` Options to pass to [fs.writeFileSync](https://nodejs.org/api/fs.html#fs_fs_writefilesync_file_data_options) and [mkdirp][]
+ * @param {string|Buffer|integer} `filepath` filepath or file descriptor.
+ * @param {string|Buffer|Uint8Array} `data` String or buffer to write to disk.
+ * @param {object} `options` Options to pass to [fs.writeFileSync][fs]{#fs_fs_writefilesync_file_data_options} and/or [mkdirp][]
+ * @return {undefined}
  * @api public
  */
 
-writeFile.sync = function(dest, val, options) {
-  mkdirp.sync(path.dirname(dest), options);
-  fs.writeFileSync(dest, val, options);
+writeFile.sync = function(filepath, data, options) {
+  if (typeof filepath !== 'string') {
+    throw new TypeError('expected filepath to be a string');
+  }
+  mkdirp.sync(path.dirname(filepath), options);
+  fs.writeFileSync(filepath, data, options);
 };
 
 /**
- * Uses `fs.createWriteStream` to write the specified file, creating any
- * intermediate directories if they don't already exist.
+ * Uses `fs.createWriteStream` to write data to a file, replacing the
+ * file if it already exists and creating any intermediate directories
+ * if they don't already exist. Data can be a string or a buffer. Returns
+ * a new [WriteStream](https://nodejs.org/api/fs.html#fs_class_fs_writestream)
+ * object.
  *
  * ```js
  * var fs = require('fs');
@@ -129,15 +142,15 @@ writeFile.sync = function(dest, val, options) {
  *   });
  * ```
  * @name .stream
- * @param  {String} `dest` Destination file path
- * @return  {Stream} Returns a write stream.
- * @param  {Object} `options` Options to pass to [mkdirp][] and [fs.createWriteStream](https://nodejs.org/api/fs.html#fs_fs_createwritestream_path_options)
+ * @param {string|Buffer|integer} `filepath` filepath or file descriptor.
+ * @param {object} `options` Options to pass to [mkdirp][] and [fs.createWriteStream][fs]{#fs_fs_createwritestream_path_options}
+ * @return {Stream} Returns a new [WriteStream](https://nodejs.org/api/fs.html#fs_class_fs_writestream) object. (See [Writable Stream](https://nodejs.org/api/stream.html#stream_class_stream_writable)).
  * @api public
  */
 
-writeFile.stream = function(dest, options) {
-  mkdirp.sync(path.dirname(dest), options);
-  return fs.createWriteStream(dest, options);
+writeFile.stream = function(filepath, options) {
+  mkdirp.sync(path.dirname(filepath), options);
+  return fs.createWriteStream(filepath, options);
 };
 
 /**

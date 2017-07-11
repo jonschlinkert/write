@@ -1,6 +1,6 @@
 # write [![NPM version](https://img.shields.io/npm/v/write.svg?style=flat)](https://www.npmjs.com/package/write) [![NPM monthly downloads](https://img.shields.io/npm/dm/write.svg?style=flat)](https://npmjs.org/package/write) [![NPM total downloads](https://img.shields.io/npm/dt/write.svg?style=flat)](https://npmjs.org/package/write) [![Linux Build Status](https://img.shields.io/travis/jonschlinkert/write.svg?style=flat&label=Travis)](https://travis-ci.org/jonschlinkert/write)
 
-> Write files to disk, by first creating intermediate directories if they don't exist, then passing through to node's native fs methods.
+> Write data to a file, replacing the file if it already exists and creating any intermediate directories if they don't already exist. Thin wrapper around node's native fs methods.
 
 ## Install
 
@@ -18,72 +18,80 @@ var writeFile = require('write');
 
 ## API
 
-### [writeFile](index.js#L33)
+### [writeFile](index.js#L40)
 
-Writes files asynchronously, creating any intermediate directories if they don't already exist, then either calls the callback, if supplied, or returns a promise.
+Asynchronously writes data to a file, replacing the file if it already exists and creating any intermediate directories if they don't already exist. Data can be a string or a buffer. Returns a promise if a callback function is not passed.
 
 **Params**
 
-* `dest` **{String}**: Destination file path
-* `str` **{String}**: String to write to disk.
-* `options` **{Object}**: Options to pass to [fs.writeFile](https://nodejs.org/api/fs.html#fs_fs_writefile_file_data_options_callback) and [mkdirp](https://github.com/substack/node-mkdirp)
+* `filepath` **{string|Buffer|integer}**: filepath or file descriptor.
+* `data` **{string|Buffer|Uint8Array}**: String to write to disk.
+* `options` **{object}**: Options to pass to [fs.writeFile](https://nodejs.org/api/fs.html#fs_fs_writefile_file_data_options_callback) and/or [mkdirp](https://github.com/substack/node-mkdirp)
 * `callback` **{Function}**: (optional) If no callback is provided, a promise is returned.
 
 **Example**
 
 ```js
 var writeFile = require('write');
-writeFile('foo.txt', 'This is content to write.', function(err) {
+writeFile('foo.txt', 'This is content...', function(err) {
   if (err) console.log(err);
 });
-```
 
-### [.promise](index.js#L75)
-
-Writes files, creating any intermediate directories if they don't already exist, and returns a promise.
-
-**Params**
-
-* `dest` **{String}**: Destination file path
-* `val` **{String|Buffer}**: String or buffer to write to disk.
-* `options` **{Object}**: Options to pass to [fs.writeFile](https://nodejs.org/api/fs.html#fs_fs_writefile_file_data_options_callback) and [mkdirp](https://github.com/substack/node-mkdirp)
-
-**Example**
-
-```js
-var writeFile = require('write');
-writeFile.promise('foo.txt', 'This is content to write.')
+// promise
+writeFile('foo.txt', 'This is content...')
   .then(function() {
     // do stuff
   });
 ```
 
-### [.sync](index.js#L113)
+### [.promise](index.js#L82)
 
-Writes files synchronously, creating any intermediate directories if they don't already exist.
+The promise version of [writeFile](#writefile). Returns a promise.
 
 **Params**
 
-* `dest` **{String}**: Destination file path
-* `val` **{String|Buffer}**: String or buffer to write to disk.
-* `options` **{Object}**: Options to pass to [fs.writeFileSync](https://nodejs.org/api/fs.html#fs_fs_writefilesync_file_data_options) and [mkdirp](https://github.com/substack/node-mkdirp)
+* `filepath` **{string|Buffer|integer}**: filepath or file descriptor.
+* `val` **{string|Buffer|Uint8Array}**: String or buffer to write to disk.
+* `options` **{object}**: Options to pass to [fs.writeFile](https://nodejs.org/api/fs.html#fs_fs_writefile_file_data_options_callback) and/or [mkdirp](https://github.com/substack/node-mkdirp)
+* `returns` **{Promise}**
 
 **Example**
 
 ```js
 var writeFile = require('write');
-writeFile.sync('foo.txt', 'This is content to write.');
+writeFile.promise('foo.txt', 'This is content...')
+  .then(function() {
+    // do stuff
+  });
 ```
 
-### [.stream](index.js#L138)
+### [.sync](index.js#L120)
 
-Uses `fs.createWriteStream` to write the specified file, creating any intermediate directories if they don't already exist.
+The synchronous version of [writeFile](#writefile). Returns undefined.
 
 **Params**
 
-* `dest` **{String}**: Destination file path
-* `options` **{Object}**: Options to pass to [mkdirp](https://github.com/substack/node-mkdirp) and [fs.createWriteStream](https://nodejs.org/api/fs.html#fs_fs_createwritestream_path_options)
-* `returns` **{Stream}**: Returns a write stream.
+* `filepath` **{string|Buffer|integer}**: filepath or file descriptor.
+* `data` **{string|Buffer|Uint8Array}**: String or buffer to write to disk.
+* `options` **{object}**: Options to pass to [fs.writeFileSync](https://nodejs.org/api/fs.html#fs_fs_writefilesync_file_data_options) and/or [mkdirp](https://github.com/substack/node-mkdirp)
+* `returns` **{undefined}**
+
+**Example**
+
+```js
+var writeFile = require('write');
+writeFile.sync('foo.txt', 'This is content...');
+```
+
+### [.stream](index.js#L151)
+
+Uses `fs.createWriteStream` to write data to a file, replacing the file if it already exists and creating any intermediate directories if they don't already exist. Data can be a string or a buffer. Returns a new [WriteStream](https://nodejs.org/api/fs.html#fs_class_fs_writestream) object.
+
+**Params**
+
+* `filepath` **{string|Buffer|integer}**: filepath or file descriptor.
+* `options` **{object}**: Options to pass to [mkdirp](https://github.com/substack/node-mkdirp) and [fs.createWriteStream](https://nodejs.org/api/fs.html#fs_fs_createwritestream_path_options)
+* `returns` **{Stream}**: Returns a new [WriteStream](https://nodejs.org/api/fs.html#fs_class_fs_writestream) object. (See [Writable Stream](https://nodejs.org/api/stream.html#stream_class_stream_writable)).
 
 **Example**
 
@@ -99,6 +107,10 @@ fs.createReadStream('README.md')
 
 ## Release history
 
+### v1.0.2 - 2017-07-11
+
+* improved documentation
+
 ### v1.0.0 - 2017-07-09
 
 **Added**
@@ -107,7 +119,7 @@ fs.createReadStream('README.md')
 
 **Changed**
 
-* The main will now return a promise if no callback is passed
+* The main export will now return a promise if no callback is passed
 
 ## About
 
@@ -115,8 +127,8 @@ fs.createReadStream('README.md')
 
 * [delete](https://www.npmjs.com/package/delete): Delete files and folders and any intermediate directories if they exist (sync and async). | [homepage](https://github.com/jonschlinkert/delete "Delete files and folders and any intermediate directories if they exist (sync and async).")
 * [read-data](https://www.npmjs.com/package/read-data): Read JSON or YAML files. | [homepage](https://github.com/jonschlinkert/read-data "Read JSON or YAML files.")
-* [read-json](https://www.npmjs.com/package/read-json): Reads and parses a JSON file. | [homepage](https://github.com/n-johnson/read-json#readme "Reads and parses a JSON file.")
 * [read-yaml](https://www.npmjs.com/package/read-yaml): Very thin wrapper around js-yaml for directly reading in YAML files. | [homepage](https://github.com/jonschlinkert/read-yaml "Very thin wrapper around js-yaml for directly reading in YAML files.")
+* [write-data](https://www.npmjs.com/package/write-data): Write a YAML or JSON file to disk. Automatically detects the format to write based… [more](https://github.com/jonschlinkert/write-data) | [homepage](https://github.com/jonschlinkert/write-data "Write a YAML or JSON file to disk. Automatically detects the format to write based on extension. Or pass `ext` on the options.")
 * [write-json](https://www.npmjs.com/package/write-json): Write a JSON file to disk, also creates intermediate directories in the destination path if… [more](https://github.com/jonschlinkert/write-json) | [homepage](https://github.com/jonschlinkert/write-json "Write a JSON file to disk, also creates intermediate directories in the destination path if they don't already exist.")
 * [write-yaml](https://www.npmjs.com/package/write-yaml): Write YAML. Converts JSON to YAML writes it to the specified file. | [homepage](https://github.com/jonschlinkert/write-yaml "Write YAML. Converts JSON to YAML writes it to the specified file.")
 
@@ -128,7 +140,7 @@ Pull requests and stars are always welcome. For bugs and feature requests, [plea
 
 | **Commits** | **Contributor** | 
 | --- | --- |
-| 31 | [jonschlinkert](https://github.com/jonschlinkert) |
+| 33 | [jonschlinkert](https://github.com/jonschlinkert) |
 | 1 | [tunnckoCore](https://github.com/tunnckoCore) |
 
 ### Building docs
@@ -163,4 +175,4 @@ Released under the [MIT License](LICENSE).
 
 ***
 
-_This file was generated by [verb-generate-readme](https://github.com/verbose/verb-generate-readme), v0.6.0, on July 09, 2017._
+_This file was generated by [verb-generate-readme](https://github.com/verbose/verb-generate-readme), v0.6.0, on July 11, 2017._
