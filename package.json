@@ -24,7 +24,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "mkdirp": "^0.5.1"
+    "make-dir": "^1.0.0"
   },
   "devDependencies": {
     "async-each": "^1.0.1",
