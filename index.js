@@ -9,7 +9,7 @@
 
 var fs = require('fs');
 var path = require('path');
-var mkdirp = require('mkdirp');
+var makeDir = require('make-dir');
 
 /**
  * Asynchronously writes data to a file, replacing the file if it already
@@ -32,7 +32,7 @@ var mkdirp = require('mkdirp');
  * @name writeFile
  * @param {string|Buffer|integer} `filepath` filepath or file descriptor.
  * @param {string|Buffer|Uint8Array} `data` String to write to disk.
- * @param {object} `options` Options to pass to [fs.writeFile][fs]{#fs_fs_writefile_file_data_options_callback} and/or [mkdirp][]
+ * @param {object} `options` Options to pass to [fs.writeFile][fs]{#fs_fs_writefile_file_data_options_callback} and/or [make-dir][]
  * @param {Function} `callback` (optional) If no callback is provided, a promise is returned.
  * @api public
  */
@@ -52,12 +52,11 @@ function writeFile(filepath, data, options, cb) {
     return;
   }
 
-  mkdirp(path.dirname(filepath), options, function(err) {
-    if (err) {
-      cb(err);
-      return;
-    }
+  makeDir(path.dirname(filepath), options)
+  .then(function() {
     fs.writeFile(filepath, data, options, cb);
+  }, function (err) {
+    cb(err);
   });
 };
 
@@ -74,7 +73,7 @@ function writeFile(filepath, data, options, cb) {
  * @name .promise
  * @param {string|Buffer|integer} `filepath` filepath or file descriptor.
  * @param {string|Buffer|Uint8Array} `val` String or buffer to write to disk.
- * @param {object} `options` Options to pass to [fs.writeFile][fs]{#fs_fs_writefile_file_data_options_callback} and/or [mkdirp][]
+ * @param {object} `options` Options to pass to [fs.writeFile][fs]{#fs_fs_writefile_file_data_options_callback} and/or [make-dir][]
  * @return {Promise}
  * @api public
  */
@@ -84,13 +83,9 @@ writeFile.promise = function(filepath, val, options) {
     return Promise.reject(new TypeError('expected filepath to be a string'));
   }
 
-  return new Promise(function(resolve, reject) {
-    mkdirp(path.dirname(filepath), options, function(err) {
-      if (err) {
-        reject(err);
-        return;
-      }
-
+  return makeDir(path.dirname(filepath), options)
+  .then(function() {
+    return new Promise(function(resolve, reject) {
       fs.writeFile(filepath, val, options, function(err) {
         if (err) {
           reject(err);
@@ -112,7 +107,7 @@ writeFile.promise = function(filepath, val, options) {
  * @name .sync
  * @param {string|Buffer|integer} `filepath` filepath or file descriptor.
  * @param {string|Buffer|Uint8Array} `data` String or buffer to write to disk.
- * @param {object} `options` Options to pass to [fs.writeFileSync][fs]{#fs_fs_writefilesync_file_data_options} and/or [mkdirp][]
+ * @param {object} `options` Options to pass to [fs.writeFileSync][fs]{#fs_fs_writefilesync_file_data_options} and/or [make-dir][]
  * @return {undefined}
  * @api public
  */
@@ -121,7 +116,7 @@ writeFile.sync = function(filepath, data, options) {
   if (typeof filepath !== 'string') {
     throw new TypeError('expected filepath to be a string');
   }
-  mkdirp.sync(path.dirname(filepath), options);
+  makeDir.sync(path.dirname(filepath), options);
   fs.writeFileSync(filepath, data, options);
 };
 
@@ -143,13 +138,13 @@ writeFile.sync = function(filepath, data, options) {
  * ```
  * @name .stream
  * @param {string|Buffer|integer} `filepath` filepath or file descriptor.
- * @param {object} `options` Options to pass to [mkdirp][] and [fs.createWriteStream][fs]{#fs_fs_createwritestream_path_options}
+ * @param {object} `options` Options to pass to [make-dir][] and [fs.createWriteStream][fs]{#fs_fs_createwritestream_path_options}
  * @return {Stream} Returns a new [WriteStream](https://nodejs.org/api/fs.html#fs_class_fs_writestream) object. (See [Writable Stream](https://nodejs.org/api/stream.html#stream_class_stream_writable)).
  * @api public
  */
 
 writeFile.stream = function(filepath, options) {
-  mkdirp.sync(path.dirname(filepath), options);
+  makeDir.sync(path.dirname(filepath), options);
   return fs.createWriteStream(filepath, options);
 };
 
