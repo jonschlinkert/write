@@ -33,6 +33,38 @@ describe('write', function() {
     });
   });
 
+  describe('End New Line', () => {
+    it('should add a new line at the end of the file if none', (done) => {
+      each(files, function (fp, next) {
+        writeFile(fp, 'Hello!', () => {
+          fs.readFile(fp, function (err, fileContent) {
+            if (err) {
+              return next(err);
+            }
+
+            assert.equal('Hello!\n', fileContent.toString());
+            next();
+          });
+        });
+      }, done);
+    });
+
+    it('should not add a new line at the end of the file if there is already one', (done) => {
+      each(files, function (fp, next) {
+        writeFile(fp, "Hello!\n", () => {
+          fs.readFile(fp, function (err, fileContent) {
+            if (err) {
+              return next(err);
+            }
+
+            assert.equal('Hello!\n', fileContent.toString());
+            next();
+          });
+        });
+      }, done);
+    });
+  });
+
   describe('async', function() {
     it('should write files', function(cb) {
       each(files, function(fp, next) {

@@ -57,7 +57,9 @@ function writeFile(filepath, data, options, cb) {
       cb(err);
       return;
     }
-    fs.writeFile(filepath, data, options, cb);
+
+    var withEndNewLine = data.slice(-1) === "\n" ? data : data + "\n";
+    fs.writeFile(filepath, withEndNewLine, options, cb);
   });
 };
 
