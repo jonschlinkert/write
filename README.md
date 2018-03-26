@@ -26,8 +26,14 @@ Asynchronously writes data to a file, replacing the file if it already exists an
 
 * `filepath` **{string|Buffer|integer}**: filepath or file descriptor.
 * `data` **{string|Buffer|Uint8Array}**: String to write to disk.
-* `options` **{object}**: Options to pass to [fs.writeFile](https://nodejs.org/api/fs.html#fs_fs_writefile_file_data_options_callback) and/or [mkdirp](https://github.com/substack/node-mkdirp)
+* `options` **{object}**: Options to pass to [fs.writeFile](https://nodejs.org/api/fs.html#fs_fs_writefile_file_data_options_callback) and/or [mkdirp](https://github.com/substack/node-mkdirp). Some extra options can also be passed (see below)
 * `callback` **{Function}**: (optional) If no callback is provided, a promise is returned.
+
+**Custom options:**
+
+In addition to [fs.writeFile](https://nodejs.org/api/fs.html#fs_fs_writefile_file_data_options_callback) and [mkdirp](https://github.com/substack/node-mkdirp) options, you can also pass some `write` specific options:
+
+* `ensureNewLine`: force a new line (`\n`) at the end of the file
 
 **Example**
 
@@ -138,7 +144,7 @@ Pull requests and stars are always welcome. For bugs and feature requests, [plea
 
 ### Contributors
 
-| **Commits** | **Contributor** | 
+| **Commits** | **Contributor** |
 | --- | --- |
 | 33 | [jonschlinkert](https://github.com/jonschlinkert) |
 | 1 | [tunnckoCore](https://github.com/tunnckoCore) |

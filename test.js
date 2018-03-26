@@ -33,35 +33,52 @@ describe('write', function() {
     });
   });
 
-  describe('End New Line', () => {
-    it('should add a new line at the end of the file if none', (done) => {
+  describe('End New Line', function () {
+    it('should just write given data by default', function (done) {
       each(files, function (fp, next) {
-        writeFile(fp, 'Hello!', () => {
+        writeFile(fp, 'Hello!', function () {
           fs.readFile(fp, function (err, fileContent) {
             if (err) {
               return next(err);
             }
 
-            assert.equal('Hello!\n', fileContent.toString());
+            assert.equal('Hello!', fileContent.toString());
             next();
           });
         });
       }, done);
     });
 
-    it('should not add a new line at the end of the file if there is already one', (done) => {
-      each(files, function (fp, next) {
-        writeFile(fp, "Hello!\n", () => {
-          fs.readFile(fp, function (err, fileContent) {
-            if (err) {
-              return next(err);
-            }
+    describe('With `ensureNewLine` option to true', function () {
+      it('should add a new line at the end of the file if none', function (done) {
+        each(files, function (fp, next) {
+          writeFile(fp, 'Hello!', { ensureNewLine: true }, function () {
+            fs.readFile(fp, function (err, fileContent) {
+              if (err) {
+                return next(err);
+              }
 
-            assert.equal('Hello!\n', fileContent.toString());
-            next();
+              assert.equal('Hello!\n', fileContent.toString());
+              next();
+            });
           });
-        });
-      }, done);
+        }, done);
+      });
+
+      it('should not add a new line at the end of the file if there is already one', function (done) {
+        each(files, function (fp, next) {
+          writeFile(fp, "Hello!\n", { ensureNewLine: true }, function() {
+            fs.readFile(fp, function (err, fileContent) {
+              if (err) {
+                return next(err);
+              }
+
+              assert.equal('Hello!\n', fileContent.toString());
+              next();
+            });
+          });
+        }, done);
+      });
     });
   });
 

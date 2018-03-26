@@ -58,8 +58,12 @@ function writeFile(filepath, data, options, cb) {
       return;
     }
 
-    var withEndNewLine = data.slice(-1) === "\n" ? data : data + "\n";
-    fs.writeFile(filepath, withEndNewLine, options, cb);
+    var preparedData = data;
+    if (options && options.ensureNewLine && data.slice(-1) !== "\n") {
+      preparedData += "\n";
+    }
+
+    fs.writeFile(filepath, preparedData, options, cb);
   });
 };
 
