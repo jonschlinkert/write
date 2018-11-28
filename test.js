@@ -33,6 +33,55 @@ describe('write', function() {
     });
   });
 
+  describe('End New Line', function () {
+    it('should just write given data by default', function (done) {
+      each(files, function (fp, next) {
+        writeFile(fp, 'Hello!', function () {
+          fs.readFile(fp, function (err, fileContent) {
+            if (err) {
+              return next(err);
+            }
+
+            assert.equal('Hello!', fileContent.toString());
+            next();
+          });
+        });
+      }, done);
+    });
+
+    describe('With `ensureNewLine` option to true', function () {
+      it('should add a new line at the end of the file if none', function (done) {
+        each(files, function (fp, next) {
+          writeFile(fp, 'Hello!', { ensureNewLine: true }, function () {
+            fs.readFile(fp, function (err, fileContent) {
+              if (err) {
+                return next(err);
+              }
+
+              assert.equal('Hello!\n', fileContent.toString());
+              next();
+            });
+          });
+        }, done);
+      });
+
+      it('should not add a new line at the end of the file if there is already one', function (done) {
+        each(files, function (fp, next) {
+          writeFile(fp, "Hello!\n", { ensureNewLine: true }, function() {
+            fs.readFile(fp, function (err, fileContent) {
+              if (err) {
+                return next(err);
+              }
+
+              assert.equal('Hello!\n', fileContent.toString());
+              next();
+            });
+          });
+        }, done);
+      });
+    });
+  });
+
   describe('async', function() {
     it('should write files', function(cb) {
       each(files, function(fp, next) {

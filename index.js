@@ -57,7 +57,13 @@ function writeFile(filepath, data, options, cb) {
       cb(err);
       return;
     }
-    fs.writeFile(filepath, data, options, cb);
+
+    var preparedData = data;
+    if (options && options.ensureNewLine && data.slice(-1) !== "\n") {
+      preparedData += "\n";
+    }
+
+    fs.writeFile(filepath, preparedData, options, cb);
   });
 };
 
