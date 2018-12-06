@@ -7,9 +7,9 @@
 
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
-var mkdirp = require('mkdirp');
+const fs = require('fs');
+const path = require('path');
+const mkdirp = require('mkdirp');
 
 /**
  * Asynchronously writes data to a file, replacing the file if it already
@@ -59,8 +59,8 @@ function writeFile(filepath, data, options, cb) {
     }
 
     var preparedData = data;
-    if (options && options.ensureNewLine && data.slice(-1) !== "\n") {
-      preparedData += "\n";
+    if (options && options.ensureNewLine && data.slice(-1) !== '\n') {
+      preparedData += '\n';
     }
 
     fs.writeFile(filepath, preparedData, options, cb);
