@@ -1,16 +1,15 @@
+'use strict';
 
-var writeFile = require('./');
-var Readable = require('stream').Readable;
+const { Readable } = require('stream');
+const write = require('./');
 
-function toStream(str) {
-  var stream = new Readable();
-  stream.push(str);
+const toStream = data => {
+  const stream = new Readable();
+  stream.push(data);
   stream.push(null);
   return stream;
-}
+};
 
 toStream('fooo')
-  .pipe(writeFile.stream('tmp/a/b/c/foo.md'))
-  .on('close', function() {
-    console.log('done');
-  })
+  .pipe(write.stream('tmp/a/b/c/foo.md'))
+  .on('close', () => console.log('done'));

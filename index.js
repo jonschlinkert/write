@@ -1,15 +1,7 @@
-/*!
- * write <https://github.com/jonschlinkert/write>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
-var mkdirp = require('mkdirp');
+const fs = require('fs');
+const path = require('path');
 
 /**
  * Asynchronously writes data to a file, replacing the file if it already
@@ -18,149 +10,197 @@ var mkdirp = require('mkdirp');
  * function is not passed.
  *
  * ```js
- * var writeFile = require('write');
- * writeFile('foo.txt', 'This is content...', function(err) {
- *   if (err) console.log(err);
- * });
+ * const write = require('write');
+ *
+ * // async/await
+ * (async () => {
+ *   await write('foo.txt', 'This is content...');
+ * })();
  *
  * // promise
- * writeFile('foo.txt', 'This is content...')
- *   .then(function() {
+ * write('foo.txt', 'This is content...')
+ *   .then(() => {
  *     // do stuff
  *   });
+ *
+ * // callback
+ * write('foo.txt', 'This is content...', err => {
+ *   // do stuff with err
+ * });
  * ```
- * @name writeFile
- * @param {string|Buffer|integer} `filepath` filepath or file descriptor.
- * @param {string|Buffer|Uint8Array} `data` String to write to disk.
- * @param {object} `options` Options to pass to [fs.writeFile][fs]{#fs_fs_writefile_file_data_options_callback} and/or [mkdirp][]
+ * @name write
+ * @param {String} `filepath` file path.
+ * @param {String|Buffer|Uint8Array} `data` Data to write.
+ * @param {Object} `options` Options to pass to [fs.writeFile][writefile]
  * @param {Function} `callback` (optional) If no callback is provided, a promise is returned.
  * @api public
  */
 
-function writeFile(filepath, data, options, cb) {
+const write = (filepath, data, options, callback) => {
   if (typeof options === 'function') {
-    cb = options;
+    callback = options;
     options = {};
   }
 
-  if (typeof cb !== 'function') {
-    return writeFile.promise.apply(null, arguments);
+  const opts = { encoding: 'utf8', ...options };
+  const destpath = opts.increment ? incrementName(filepath) : filepath;
+  const result = { path: destpath, data };
+
+  if (opts.overwrite === false && exists(filepath, destpath)) {
+    throw new Error('File already exists: ' + destpath);
   }
 
-  if (typeof filepath !== 'string') {
-    cb(new TypeError('expected filepath to be a string'));
+  const promise = mkdir(path.dirname(destpath), { recursive: true, ...options })
+    .then(() => {
+      return new Promise((resolve, reject) => {
+        fs.createWriteStream(destpath, opts)
+          .on('error', err => reject(err))
+          .on('close', resolve)
+          .end(ensureNewline(data, opts));
+      });
+    });
+
+  if (typeof callback === 'function') {
+    promise.then(() => callback(null, result)).catch(callback);
     return;
   }
 
-  mkdirp(path.dirname(filepath), options, function(err) {
-    if (err) {
-      cb(err);
-      return;
-    }
-
-    var preparedData = data;
-    if (options && options.ensureNewLine && data.slice(-1) !== "\n") {
-      preparedData += "\n";
-    }
-
-    fs.writeFile(filepath, preparedData, options, cb);
-  });
+  return promise.then(() => result);
 };
 
 /**
- * The promise version of [writeFile](#writefile). Returns a promise.
+ * The synchronous version of [write](#write). Returns undefined.
  *
  * ```js
- * var writeFile = require('write');
- * writeFile.promise('foo.txt', 'This is content...')
- *   .then(function() {
- *     // do stuff
- *   });
- * ```
- * @name .promise
- * @param {string|Buffer|integer} `filepath` filepath or file descriptor.
- * @param {string|Buffer|Uint8Array} `val` String or buffer to write to disk.
- * @param {object} `options` Options to pass to [fs.writeFile][fs]{#fs_fs_writefile_file_data_options_callback} and/or [mkdirp][]
- * @return {Promise}
- * @api public
- */
-
-writeFile.promise = function(filepath, val, options) {
-  if (typeof filepath !== 'string') {
-    return Promise.reject(new TypeError('expected filepath to be a string'));
-  }
-
-  return new Promise(function(resolve, reject) {
-    mkdirp(path.dirname(filepath), options, function(err) {
-      if (err) {
-        reject(err);
-        return;
-      }
-
-      fs.writeFile(filepath, val, options, function(err) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(val);
-      });
-    });
-  });
-};
-
-/**
- * The synchronous version of [writeFile](#writefile). Returns undefined.
- *
- * ```js
- * var writeFile = require('write');
- * writeFile.sync('foo.txt', 'This is content...');
+ * const write = require('write');
+ * write.sync('foo.txt', 'This is content...');
  * ```
  * @name .sync
- * @param {string|Buffer|integer} `filepath` filepath or file descriptor.
- * @param {string|Buffer|Uint8Array} `data` String or buffer to write to disk.
- * @param {object} `options` Options to pass to [fs.writeFileSync][fs]{#fs_fs_writefilesync_file_data_options} and/or [mkdirp][]
+ * @param {String} `filepath` file path.
+ * @param {String|Buffer|Uint8Array} `data` Data to write.
+ * @param {Object} `options` Options to pass to [fs.writeFileSync][writefilesync]
  * @return {undefined}
  * @api public
  */
 
-writeFile.sync = function(filepath, data, options) {
+write.sync = (filepath, data, options) => {
   if (typeof filepath !== 'string') {
     throw new TypeError('expected filepath to be a string');
   }
-  mkdirp.sync(path.dirname(filepath), options);
-  fs.writeFileSync(filepath, data, options);
+
+  const opts = { encoding: 'utf8', ...options };
+  const destpath = opts.increment ? incrementName(filepath) : filepath;
+
+  if (opts.overwrite === false && exists(filepath, destpath)) {
+    throw new Error('File already exists: ' + destpath);
+  }
+
+  mkdirSync(path.dirname(destpath), { recursive: true, ...options });
+  fs.writeFileSync(destpath, ensureNewline(data, opts), opts);
+  return { path: destpath, data };
 };
 
 /**
- * Uses `fs.createWriteStream` to write data to a file, replacing the
- * file if it already exists and creating any intermediate directories
- * if they don't already exist. Data can be a string or a buffer. Returns
- * a new [WriteStream](https://nodejs.org/api/fs.html#fs_class_fs_writestream)
- * object.
+ * Returns a new [WriteStream][writestream] object. Uses `fs.createWriteStream`
+ * to write data to a file, replacing the file if it already exists and creating
+ * any intermediate directories if they don't already exist. Data can be a string
+ * or a buffer.
  *
  * ```js
- * var fs = require('fs');
- * var writeFile = require('write');
+ * const fs = require('fs');
+ * const write = require('write');
  * fs.createReadStream('README.md')
- *   .pipe(writeFile.stream('a/b/c/other-file.md'))
- *   .on('close', function() {
+ *   .pipe(write.stream('a/b/c/other-file.md'))
+ *   .on('close', () => {
  *     // do stuff
  *   });
  * ```
  * @name .stream
- * @param {string|Buffer|integer} `filepath` filepath or file descriptor.
- * @param {object} `options` Options to pass to [mkdirp][] and [fs.createWriteStream][fs]{#fs_fs_createwritestream_path_options}
- * @return {Stream} Returns a new [WriteStream](https://nodejs.org/api/fs.html#fs_class_fs_writestream) object. (See [Writable Stream](https://nodejs.org/api/stream.html#stream_class_stream_writable)).
+ * @param {String} `filepath` file path.
+ * @param {Object} `options` Options to pass to [fs.createWriteStream][wsoptions]
+ * @return {Stream} Returns a new [WriteStream][writestream] object. (See [Writable Stream][writable]).
  * @api public
  */
 
-writeFile.stream = function(filepath, options) {
-  mkdirp.sync(path.dirname(filepath), options);
-  return fs.createWriteStream(filepath, options);
+write.stream = (filepath, contents, options) => {
+  if (typeof filepath !== 'string') {
+    throw new TypeError('expected filepath to be a string');
+  }
+
+  const opts = { encoding: 'utf8', ...options };
+  const destpath = opts.increment ? incrementName(filepath) : filepath;
+
+  if (opts.overwrite === false && exists(filepath, destpath)) {
+    throw new Error('File already exists: ' + filepath);
+  }
+
+  mkdirSync(path.dirname(destpath), { recursive: true, ...options });
+  return fs.createWriteStream(destpath, opts);
 };
 
 /**
- * Expose `writeFile`
+ * Increment the filename if the file already exists and enabled by the user
  */
 
-module.exports = writeFile;
+const incrementName = destpath => {
+  let file = { ...path.parse(destpath), path: destpath };
+  let name = file.name;
+  let n = 1;
+
+  while (fs.existsSync(file.path)) {
+    file.path = path.join(file.dir, `${name} (${++n})${file.ext}`);
+  }
+
+  return file.path;
+};
+
+/**
+ * Ensure newline at EOF if defined on options
+ */
+
+const ensureNewline = (data, options) => {
+  if (!options || options.newline !== true) return data;
+  if (typeof data !== 'string' && !isBuffer(data)) {
+    return data;
+  }
+
+  // only call `.toString()` on the last character. This way, if
+  // data is a buffer, we only need to call `.toString()` on
+  // the entire string if the condition is true.
+  if (String(data.slice(-1)) !== '\n') {
+    return data.toString() + '\n';
+  }
+
+  return data;
+};
+
+// if filepath !== destpath, that means the user has enabled
+// "increment", which has already checked the file system and
+// renamed the file to avoid conflicts, so we don't need to
+// check again.
+const exists = (filepath, destpath) => {
+  return filepath === destpath && fs.existsSync(filepath);
+};
+
+const mkdir = (dirname, options) => {
+  return new Promise(res => fs.mkdir(dirname, options, () => res()));
+};
+
+const mkdirSync = (dirname, options) => {
+  try {
+    fs.mkdirSync(dirname, options);
+  } catch (err) { /* do nothing */ }
+};
+
+const isBuffer = data => {
+  if (data.constructor && typeof data.constructor.isBuffer === 'function') {
+    return data.constructor.isBuffer(data);
+  }
+  return false;
+};
+
+/**
+ * Expose `write`
+ */
+
+module.exports = write;
