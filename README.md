@@ -6,7 +6,7 @@ Please consider following this project's author, [Jon Schlinkert](https://github
 
 ## Install
 
-Install with [npm](https://www.npmjs.com/) (requires [Node.js](https://nodejs.org/en/) >=4):
+Install with [npm](https://www.npmjs.com/) (requires [Node.js](https://nodejs.org/en/) >=10):
 
 ```sh
 $ npm install --save write
@@ -61,7 +61,7 @@ write.sync('foo.txt', 'some data...', { increment: true });
 
 ## API
 
-### [write](index.js#L40)
+### [write](index.js#L39)
 
 Asynchronously writes data to a file, replacing the file if it already exists and creating any intermediate directories if they don't already exist. Data can be a string or a buffer. Returns a promise if a callback function is not passed.
 
@@ -94,7 +94,7 @@ write('foo.txt', 'This is content...', err => {
 });
 ```
 
-### [.sync](index.js#L87)
+### [.sync](index.js#L86)
 
 The synchronous version of [write](#write). Returns undefined.
 
@@ -112,7 +112,7 @@ const write = require('write');
 write.sync('foo.txt', 'This is content...');
 ```
 
-### [.stream](index.js#L126)
+### [.stream](index.js#L125)
 
 Returns a new [WriteStream](https://nodejs.org/api/fs.html#fs_class_fs_writestream) object. Uses `fs.createWriteStream` to write data to a file, replacing the file if it already exists and creating any intermediate directories if they don't already exist. Data can be a string or a buffer.
 

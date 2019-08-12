@@ -135,6 +135,7 @@ describe('write', () => {
 
       for (let file of files) {
         await promise(file);
+        assert(fs.existsSync(file));
         let contents = fs.readFileSync(file, 'utf8');
         assert.equal('this is content...', contents.toString());
       }
@@ -153,6 +154,7 @@ describe('write', () => {
 
       for (let file of fixtures) {
         await promise(file);
+        assert(fs.existsSync(file));
         let contents = fs.readFileSync(file, 'utf8');
         assert.equal('this is content...', contents.toString());
       }
