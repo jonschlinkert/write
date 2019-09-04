@@ -1,4 +1,4 @@
-# write [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=W8YFZ425KND68) [![NPM version](https://img.shields.io/npm/v/write.svg?style=flat)](https://www.npmjs.com/package/write) [![NPM monthly downloads](https://img.shields.io/npm/dm/write.svg?style=flat)](https://npmjs.org/package/write) [![NPM total downloads](https://img.shields.io/npm/dt/write.svg?style=flat)](https://npmjs.org/package/write) [![Build Status](https://travis-ci.org/jonschlinkert/write.svg?branch=2.0)](https://travis-ci.org/jonschlinkert/write)
+# write [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=W8YFZ425KND68) [![NPM version](https://img.shields.io/npm/v/write.svg?style=flat)](https://www.npmjs.com/package/write) [![NPM monthly downloads](https://img.shields.io/npm/dm/write.svg?style=flat)](https://npmjs.org/package/write) [![NPM total downloads](https://img.shields.io/npm/dt/write.svg?style=flat)](https://npmjs.org/package/write) [![Build Status](https://travis-ci.org/jonschlinkert/write.svg?branch=master)](https://travis-ci.org/jonschlinkert/write)
 
 > Write data to a file, replacing the file if it already exists and creating any intermediate directories if they don't already exist. Thin wrapper around node's native fs methods.
 
@@ -61,7 +61,7 @@ write.sync('foo.txt', 'some data...', { increment: true });
 
 ## API
 
-### [write](index.js#L40)
+### [write](index.js#L41)
 
 Asynchronously writes data to a file, replacing the file if it already exists and creating any intermediate directories if they don't already exist. Data can be a string or a buffer. Returns a promise if a callback function is not passed.
 
@@ -95,7 +95,7 @@ write('foo.txt', 'This is content...', err => {
 });
 ```
 
-### [.sync](index.js#L87)
+### [.sync](index.js#L88)
 
 The synchronous version of [write](#write). Returns undefined.
 
@@ -113,7 +113,7 @@ const write = require('write');
 write.sync('foo.txt', 'This is content...');
 ```
 
-### [.stream](index.js#L126)
+### [.stream](index.js#L127)
 
 Returns a new [WriteStream](https://nodejs.org/api/fs.html#fs_class_fs_writestream) object. Uses `fs.createWriteStream` to write data to a file, replacing the file if it already exists and creating any intermediate directories if they don't already exist. Data can be a string or a buffer.
 
@@ -176,9 +176,11 @@ $ npm install -g verbose/verb#dev verb-generate-readme && verb
 
 You might also be interested in these projects:
 
+* [add-filename-increment](https://www.npmjs.com/package/add-filename-increment): When copying or moving files, it's common for operating systems to automatically add an increment… [more](https://github.com/jonschlinkert/add-filename-increment) | [homepage](https://github.com/jonschlinkert/add-filename-increment "When copying or moving files, it's common for operating systems to automatically add an increment or 'copy' to duplicate file names. This does that for Node.js applications, with automatic platform detection and support for Linux, MacOs, and Windows conve")
 * [delete](https://www.npmjs.com/package/delete): Delete files and folders and any intermediate directories if they exist (sync and async). | [homepage](https://github.com/jonschlinkert/delete "Delete files and folders and any intermediate directories if they exist (sync and async).")
 * [read-data](https://www.npmjs.com/package/read-data): Read JSON or YAML files. | [homepage](https://github.com/jonschlinkert/read-data "Read JSON or YAML files.")
 * [read-yaml](https://www.npmjs.com/package/read-yaml): Very thin wrapper around js-yaml for directly reading in YAML files. | [homepage](https://github.com/jonschlinkert/read-yaml "Very thin wrapper around js-yaml for directly reading in YAML files.")
+* [strip-filename-increment](https://www.npmjs.com/package/strip-filename-increment): Operating systems commonly add a trailing increment, or the word 'copy', or something similar to… [more](https://github.com/jonschlinkert/strip-filename-increment) | [homepage](https://github.com/jonschlinkert/strip-filename-increment "Operating systems commonly add a trailing increment, or the word 'copy', or something similar to duplicate files. This strips those increments. Tested on Windows, MacOS, and Linux.")
 * [write-data](https://www.npmjs.com/package/write-data): Write a YAML or JSON file to disk. Automatically detects the format to write based… [more](https://github.com/jonschlinkert/write-data) | [homepage](https://github.com/jonschlinkert/write-data "Write a YAML or JSON file to disk. Automatically detects the format to write based on extension. Or pass `ext` on the options.")
 * [write-json](https://www.npmjs.com/package/write-json): Write a JSON file to disk, also creates intermediate directories in the destination path if… [more](https://github.com/jonschlinkert/write-json) | [homepage](https://github.com/jonschlinkert/write-json "Write a JSON file to disk, also creates intermediate directories in the destination path if they don't already exist.")
 * [write-yaml](https://www.npmjs.com/package/write-yaml): Write YAML. Converts JSON to YAML writes it to the specified file. | [homepage](https://github.com/jonschlinkert/write-yaml "Write YAML. Converts JSON to YAML writes it to the specified file.")
