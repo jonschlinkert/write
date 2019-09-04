@@ -146,9 +146,11 @@ write.stream = (filepath, options) => {
 const incrementName = destpath => {
   let file = { ...path.parse(destpath), path: destpath };
   let name = file.name;
+  let prev;
   let n = 1;
 
-  while (fs.existsSync(file.path)) {
+  while (prev !== file.path && fs.existsSync(file.path)) {
+    prev = file.path;
     file.path = path.join(file.dir, `${name} (${++n})${file.ext}`);
   }
 
