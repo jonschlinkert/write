@@ -1,7 +1,7 @@
 {
   "name": "write",
   "description": "Write data to a file, replacing the file if it already exists and creating any intermediate directories if they don't already exist. Thin wrapper around node's native fs methods.",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "homepage": "https://github.com/jonschlinkert/write",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "contributors": [
@@ -22,6 +22,9 @@
   },
   "scripts": {
     "test": "mocha"
+  },
+  "dependencies": {
+    "add-filename-increment": "^1.0.0"
   },
   "devDependencies": {
     "gulp-format-md": "^2.0.0",
@@ -60,6 +63,8 @@
     ],
     "related": {
       "list": [
+        "add-filename-increment",
+        "strip-filename-increment",
         "delete",
         "read-data",
         "read-yaml",
