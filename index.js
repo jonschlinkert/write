@@ -33,6 +33,7 @@ const path = require('path');
  * @param {String|Buffer|Uint8Array} `data` Data to write.
  * @param {Object} `options` Options to pass to [fs.writeFile][writefile]
  * @param {Function} `callback` (optional) If no callback is provided, a promise is returned.
+ * @returns {Object} Returns an object with the `path` and `contents` of the file that was written to the file system. This is useful for debugging when `options.increment` is used and the path might have been modified.
  * @api public
  */
 
@@ -79,7 +80,7 @@ const write = (filepath, data, options, callback) => {
  * @param {String} `filepath` file path.
  * @param {String|Buffer|Uint8Array} `data` Data to write.
  * @param {Object} `options` Options to pass to [fs.writeFileSync][writefilesync]
- * @return {undefined}
+ * @returns {Object} Returns an object with the `path` and `contents` of the file that was written to the file system. This is useful for debugging when `options.increment` is used and the path might have been modified.
  * @api public
  */
 
@@ -122,7 +123,7 @@ write.sync = (filepath, data, options) => {
  * @api public
  */
 
-write.stream = (filepath, contents, options) => {
+write.stream = (filepath, options) => {
   if (typeof filepath !== 'string') {
     throw new TypeError('expected filepath to be a string');
   }
@@ -164,11 +165,14 @@ const ensureNewline = (data, options) => {
     return data;
   }
 
-  // only call `.toString()` on the last character. This way, if
-  // data is a buffer, we only need to call `.toString()` on
-  // the entire string if the condition is true.
+  // Only call `.toString()` on the last character. This way,
+  // if data is a buffer, we don't need to stringify the entire
+  // buffer just to append a newline.
   if (String(data.slice(-1)) !== '\n') {
-    return data.toString() + '\n';
+    if (typeof data === 'string') {
+      return data + '\n';
+    }
+    return data.concat(Buffer.from('\n'));
   }
 
   return data;
@@ -183,7 +187,7 @@ const exists = (filepath, destpath) => {
 };
 
 const mkdir = (dirname, options) => {
-  return new Promise(res => fs.mkdir(dirname, options, () => res()));
+  return new Promise(resolve => fs.mkdir(dirname, options, () => resolve()));
 };
 
 const mkdirSync = (dirname, options) => {
