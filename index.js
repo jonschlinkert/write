@@ -151,7 +151,7 @@ const incrementName = destpath => {
 
   while (prev !== file.path && fs.existsSync(file.path)) {
     prev = file.path;
-    file.path = path.join(file.dir, `${name} (${++n})${file.ext}`);
+    file.path = path.resolve(file.dir, `${name} (${++n})${file.ext}`);
   }
 
   return file.path;
