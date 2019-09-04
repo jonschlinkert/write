@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const increment = require('add-filename-increment');
 
 /**
  * Asynchronously writes data to a file, replacing the file if it already
@@ -44,7 +45,7 @@ const write = (filepath, data, options, callback) => {
   }
 
   const opts = { encoding: 'utf8', ...options };
-  const destpath = opts.increment ? incrementName(filepath) : filepath;
+  const destpath = opts.increment ? incrementName(filepath, options) : filepath;
   const result = { path: destpath, data };
 
   if (opts.overwrite === false && exists(filepath, destpath)) {
@@ -90,7 +91,7 @@ write.sync = (filepath, data, options) => {
   }
 
   const opts = { encoding: 'utf8', ...options };
-  const destpath = opts.increment ? incrementName(filepath) : filepath;
+  const destpath = opts.increment ? incrementName(filepath, options) : filepath;
 
   if (opts.overwrite === false && exists(filepath, destpath)) {
     throw new Error('File already exists: ' + destpath);
@@ -129,7 +130,7 @@ write.stream = (filepath, options) => {
   }
 
   const opts = { encoding: 'utf8', ...options };
-  const destpath = opts.increment ? incrementName(filepath) : filepath;
+  const destpath = opts.increment ? incrementName(filepath, options) : filepath;
 
   if (opts.overwrite === false && exists(filepath, destpath)) {
     throw new Error('File already exists: ' + filepath);
@@ -143,18 +144,9 @@ write.stream = (filepath, options) => {
  * Increment the filename if the file already exists and enabled by the user
  */
 
-const incrementName = destpath => {
-  let file = { ...path.parse(destpath), path: destpath };
-  let name = file.name;
-  let prev;
-  let n = 1;
-
-  while (prev !== file.path && fs.existsSync(file.path)) {
-    prev = file.path;
-    file.path = path.resolve(file.dir, `${name} (${++n})${file.ext}`);
-  }
-
-  return file.path;
+const incrementName = (destpath, options = {}) => {
+  if (options.increment === true) options.increment = void 0;
+  return increment(destpath, options);
 };
 
 /**
