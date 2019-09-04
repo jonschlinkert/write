@@ -14,7 +14,7 @@ const path = require('path');
 const assert = require('assert').strict;
 const rimraf = require('rimraf');
 const write = require('..');
-const tmp = path.join.bind(path, __dirname, 'fixtures');
+const tmp = path.resolve.bind(path, __dirname, 'fixtures');
 const files = ['a.md', 'b.md', 'c.md', 'd.md', 'e.md'].map(n => tmp(n));
 
 const toStream = str => {
@@ -142,7 +142,7 @@ describe('write', () => {
     });
 
     it('should overwrite an existing file', async() => {
-      const fixtures = files.slice().concat(['e.md', 'e.md']).map(n => tmp(n));
+      const fixtures = [...files, 'e.md', 'e.md'].map(n => tmp(n));
       const promise = file => {
         return new Promise((resolve, reject) => {
           toStream('this is content...')
